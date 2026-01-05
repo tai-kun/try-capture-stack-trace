@@ -63,7 +63,7 @@ jobs:
           TAG_NAME="v${{ steps.semver.outputs.version }}"
           echo "タグを作成：$TAG_NAME"
           git tag -f "$TAG_NAME"
-          git push origin- f "$TAG_NAME"
+          git push origin -f "$TAG_NAME"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
