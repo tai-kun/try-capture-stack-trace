@@ -28,10 +28,13 @@ jobs:
 
       - name: "バージョン確認"
         run: |
-          if npm view "try-capture-stack-trace@${{ steps.semver.outputs.version }}" version >/dev/null 2>&1; then
+          if npm view "$_PACKAGE@$_VERSION" version >/dev/null 2>&1; then
             echo "Error: そのバージョンはすでに存在しています。" >&2
             exit 1
           fi
+        env:
+          _PACKAGE: try-capture-stack-trace
+          _VERSION: ${{ steps.semver.outputs.version }}
 
       - name: "チェックアウト"
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
@@ -54,17 +57,20 @@ jobs:
 
       - name: "バージョンを更新"
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          npm version '${{ steps.semver.outputs.version }}'
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          npm version "$_VERSION"
+        env:
+          _VERSION: ${{ steps.semver.outputs.version }}
 
       - name: "タグ打ち"
         run: |
-          TAG_NAME="v${{ steps.semver.outputs.version }}"
+          TAG_NAME="v$_VERSION"
           echo "タグを作成：$TAG_NAME"
           git tag -f "$TAG_NAME"
           git push origin -f "$TAG_NAME"
         env:
+          _VERSION: ${{ steps.semver.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "公開"
