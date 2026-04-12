@@ -26,18 +26,18 @@ jobs:
           version: ${{ github.event.inputs.version }}
         id: semver
 
+      - name: "チェックアウト"
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+
       - name: "バージョン確認"
         run: |
-          if npm view "$_PACKAGE@$_VERSION" version >/dev/null 2>&1; then
-            echo "Error: そのバージョンはすでに存在しています。" >&2
+          PACKAGE_NAME="$(jq -r .name package.json)"
+          if npm view "$PACKAGE_NAME@$_VERSION" version >/dev/null 2>&1; then
+            echo "Error: $PACKAGE_NAME のバージョン $_VERSION はすでに存在しています。" >&2
             exit 1
           fi
         env:
-          _PACKAGE: try-capture-stack-trace
           _VERSION: ${{ steps.semver.outputs.version }}
-
-      - name: "チェックアウト"
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
 
       - name: "Node.js をセットアップ"
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
