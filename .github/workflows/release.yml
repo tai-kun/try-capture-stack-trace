@@ -17,8 +17,8 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     permissions:
-        contents: write
-        id-token: write
+      contents: write
+      id-token: write
     steps:
       - name: "バージョン解析"
         uses: tai-kun/gha-semver-parser@v1
@@ -57,24 +57,54 @@ jobs:
 
       - name: "バージョンを更新"
         run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          npm version "$_VERSION"
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          npm version "$_VERSION" --no-git-tag-version
         env:
           _VERSION: ${{ steps.semver.outputs.version }}
 
       - name: "タグ打ち"
+        id: create_tag
         run: |
           TAG_NAME="v$_VERSION"
-          echo "タグを作成：$TAG_NAME"
-          git tag -f "$TAG_NAME"
-          git push origin -f "$TAG_NAME"
+          git tag "$TAG_NAME"
+          git push origin "$TAG_NAME"
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
         env:
           _VERSION: ${{ steps.semver.outputs.version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Release の作成"
+        run: gh release create "$_TAG_NAME" --generate-notes
+        env:
+          _TAG_NAME: ${{ steps.create_tag.outputs.tag_name }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: "公開"
         run: npm publish
+      
+      - name: "リリース失敗時のクリーンアップ"
+        if: failure()
+        run: |
+          if [ -z "$_TAG_NAME" ]; then
+            echo "タグが作成されていないため、クリーンアップをスキップします。"
+            exit 0
+          fi
+
+          echo "エラーが発生しました。タグ $_TAG_NAME および関連するリリースを削除します。"
+
+          # Release の削除
+          if gh release view "$_TAG_NAME" >/dev/null 2>&1; then
+            gh release delete "$_TAG_NAME" --yes
+          fi
+
+          # リモートタグの削除
+          git push --delete origin "$_TAG_NAME" || echo "リモートタグの削除に失敗しました"
+
+          # ローカルタグの削除
+          git tag -d "$_TAG_NAME" || true
+        env:
+          _TAG_NAME: ${{ steps.create_tag.outputs.tag_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "npm ログをアップロード"
         if: always()
@@ -83,4 +113,4 @@ jobs:
           name: npm-logs-publish
           path: /home/runner/.npm/_logs/*.log
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
