@@ -24,7 +24,7 @@ describe("Error.captureStackTrace が未定義の環境の場合", () => {
     expect,
   }) => {
     // Arrange
-    const originalCaptureStackTrace = Error.captureStackTrace;
+    const originalCaptureStackTrace = Error.captureStackTrace.bind(Error);
     // @ts-expect-error: テストのために一時的に削除する
     delete Error.captureStackTrace;
 

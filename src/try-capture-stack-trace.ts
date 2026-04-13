@@ -8,7 +8,7 @@
  */
 export default function tryCaptureStackTrace(
   targetObject: object,
-  constructorOpt?: Function | undefined,
+  constructorOpt?: Function,
 ): void {
   if (typeof Error.captureStackTrace === "function") {
     Error.captureStackTrace(targetObject, constructorOpt);
