@@ -2,13 +2,9 @@
   "name": "try-capture-stack-trace",
   "version": "0.0.0",
   "description": "",
-  "sideEffects": false,
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+  "homepage": "https://github.com/tai-kun/try-capture-stack-trace",
+  "repository": {
+    "url": "https://github.com/tai-kun/try-capture-stack-trace"
   },
   "files": [
     "dist",
@@ -16,9 +12,16 @@
     "package.json",
     "LICENSE"
   ],
-  "homepage": "https://github.com/tai-kun/try-capture-stack-trace",
-  "repository": {
-    "url": "https://github.com/tai-kun/try-capture-stack-trace"
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --project ./.config/tsconfig.build.json"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.5",
@@ -26,13 +29,10 @@
     "@types/node": "^22.19.17",
     "@vitest/browser": "^4.1.4",
     "@vitest/browser-playwright": "^4.1.4",
-    "dprint": "^0.54.0",
     "npm-check-updates": "^19.6.6",
+    "oxfmt": "^0.44.0",
     "playwright": "^1.59.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.4"
-  },
-  "scripts": {
-    "build": "tsc --project ./.config/tsconfig.build.json"
   }
 }

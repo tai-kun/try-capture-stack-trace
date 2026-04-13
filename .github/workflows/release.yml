@@ -27,7 +27,7 @@ jobs:
         id: semver
 
       - name: "チェックアウト"
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: "バージョン確認"
         run: |
@@ -40,7 +40,7 @@ jobs:
           _VERSION: ${{ steps.semver.outputs.version }}
 
       - name: "Node.js をセットアップ"
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f  # v6.1.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: 24.x
           cache: npm
@@ -81,7 +81,7 @@ jobs:
 
       - name: "公開"
         run: npm publish
-      
+
       - name: "リリース失敗時のクリーンアップ"
         if: failure()
         run: |
@@ -108,7 +108,7 @@ jobs:
 
       - name: "npm ログをアップロード"
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: npm-logs-publish
           path: /home/runner/.npm/_logs/*.log
