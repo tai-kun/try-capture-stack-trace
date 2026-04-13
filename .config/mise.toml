@@ -6,6 +6,7 @@ run = [
   { task = "test:server" },
   { task = "test:client" },
   { task = "test:format" },
+  { task = "test:lint" },
   { task = "test:typecheck" },
 ]
 
@@ -18,6 +19,9 @@ run = "npx vitest --config ./.config/vitest.client.ts"
 [tasks."test.format"]
 run = "npx oxfmt --config ./.config/.oxfmtrc.json --check"
 
+[tasks."test.lint"]
+run = "npx oxlint --config ./.config/.oxlintrc.json"
+
 [tasks."test:typecheck"]
 run = [
   "npx tsc --noEmit --project ./.config/tsconfig.base.json",
@@ -28,6 +32,9 @@ run = [
 
 [tasks.fmt]
 run = "npx oxfmt --config ./.config/.oxfmtrc.json"
+
+[tasks.lint]
+run = "npx oxlint --config ./.config/.oxlintrc.json"
 
 [tasks.update]
 run = [
