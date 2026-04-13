@@ -16,10 +16,10 @@ run = "npx vitest --config ./.config/vitest.server.ts"
 [tasks."test:client"]
 run = "npx vitest --config ./.config/vitest.client.ts"
 
-[tasks."test.format"]
+[tasks."test:format"]
 run = "npx oxfmt --config ./.config/.oxfmtrc.json --check"
 
-[tasks."test.lint"]
+[tasks."test:lint"]
 run = "npx oxlint --config ./.config/.oxlintrc.json"
 
 [tasks."test:typecheck"]
